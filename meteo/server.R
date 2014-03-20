@@ -9,7 +9,7 @@ library(rgdal)
 library(markdown)
 
 archivo <- "datos/datosnetcdf.nc"
-idx <- seq(as.POSIXct('2014-03-13 01:00:00', tz="UTC"), as.POSIXct('2014-03-17 00:00:00', tz="UTC"), 'hour')
+idx <- seq(as.POSIXct('2014-03-20 01:00:00', tz="UTC"), as.POSIXct('2014-03-24 00:00:00', tz="UTC"), 'hour')
 idx <- as.POSIXct(idx)
 
 ## Leemos la variable temperatura y generamos su leyenda
