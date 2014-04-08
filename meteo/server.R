@@ -9,7 +9,7 @@ library(rgdal)
 library(markdown)
 
 archivo <- "datos/datosnetcdf.nc"
-idx <- seq(as.POSIXct('2014-03-20 01:00:00', tz="UTC"), as.POSIXct('2014-03-24 00:00:00', tz="UTC"), 'hour')
+idx <- seq(as.POSIXct('2014-04-07 01:00:00', tz="UTC"), as.POSIXct('2014-04-11 00:00:00', tz="UTC"), 'hour')
 idx <- as.POSIXct(idx)
 
 ## Leemos la variable temperatura y generamos su leyenda
@@ -54,10 +54,10 @@ shinyServer(function(input, output) {
     datos$nieve <- t(spreci)
     datos$time<-idx
     
-    t_plot <- ggplot(datos, aes(x=time, y=t.vals.))+ geom_line(colour = "red", size = 1)+ylab("Temperatura ºC") + xlab("Fecha")+ ggtitle("Temperatura")+scale_x_datetime(breaks = date_breaks("4 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
-    s_plot <- ggplot(datos, aes(x=time, y=nieve))+geom_bar(stat="identity",fill="orange", colour="orange") +ylab("mm/h") + xlab("Fecha") + ggtitle("Nieve")+scale_x_datetime(breaks = date_breaks("4 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
-    sl_plot <- ggplot(datos, aes(x=time, y=snow_level)) + geom_line(colour = "green", size = 1)+ylab("Altura (m)") + xlab("Fecha") + ggtitle("Snow level")+scale_x_datetime(breaks = date_breaks("4 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
-    p_plot <- ggplot(datos, aes(x=time, y=lluvia))+geom_bar(stat="identity",fill="blue", colour="blue")+ylab("mm/h") + xlab("Fecha") + ggtitle("Lluvia")+scale_x_datetime(breaks = date_breaks("4 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))        
+    t_plot <- ggplot(datos, aes(x=time, y=t.vals.))+ geom_line(colour = "red", size = 1)+ylab("Temperatura ºC") + xlab("Fecha")+ ggtitle("Temperatura")+scale_x_datetime(breaks = date_breaks("6 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
+    s_plot <- ggplot(datos, aes(x=time, y=nieve))+geom_bar(stat="identity",fill="orange", colour="orange") +ylab("mm/h") + xlab("Fecha") + ggtitle("Nieve")+scale_x_datetime(breaks = date_breaks("6 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
+    sl_plot <- ggplot(datos, aes(x=time, y=snow_level)) + geom_line(colour = "green", size = 1)+ylab("Altura (m)") + xlab("Fecha") + ggtitle("Snow level")+scale_x_datetime(breaks = date_breaks("6 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
+    p_plot <- ggplot(datos, aes(x=time, y=lluvia))+geom_bar(stat="identity",fill="blue", colour="blue")+ylab("mm/h") + xlab("Fecha") + ggtitle("Lluvia")+scale_x_datetime(breaks = date_breaks("6 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))        
     multiplot<-grid.arrange(t_plot, sl_plot, s_plot, p_plot, ncol=2, main = paste('Coordenadas ', input$lat, ', ', input$lon))
     
     print(multiplot)
