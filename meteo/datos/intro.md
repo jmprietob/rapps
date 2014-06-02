@@ -1,11 +1,11 @@
 Introduction
 ========================================================
 
-This shiny application allows display and query data series extracting data from latitude-longitude.
+This shiny application allows display and query data series extracting data from a location.
 
 ## Use
 
-Click the <b>Update</b> button to generate the graphics when you choose your own lat - lon.
+Click the <b>Update</b> button to generate the graphics when you choose your own location.
 
 A cerca de
 ========================================================

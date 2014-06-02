@@ -9,7 +9,7 @@ library(rgdal)
 library(markdown)
 
 archivo <- "datos/datosnetcdf.nc"
-idx <- seq(as.POSIXct('2014-04-07 01:00:00', tz="UTC"), as.POSIXct('2014-04-11 00:00:00', tz="UTC"), 'hour')
+idx <- seq(as.POSIXct('2014-06-02 01:00:00', tz="UTC"), as.POSIXct('2014-06-06 00:00:00', tz="UTC"), 'hour')
 idx <- as.POSIXct(idx)
 
 ## Leemos la variable temperatura y generamos su leyenda
@@ -23,16 +23,10 @@ proj4string(p) <- CRS("+proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 
 snow <- stack(archivo, varname = "snow_prec")
 proj4string(snow) <- CRS("+proj=lcc +lon_0=-14.1 +lat_0=34.823 +lat_1=43 +lat_2=43 +x_0=536402.3 +y_0=-18558.61 +units=km +ellps=WGS84")
 
-#Panticosa -0.285628,42.7244749
-#Formigal -0.37, 42.775
-#Zapardiel -5.3292159, 40.3588136
-#La morcuera (-3.830237, 40.828359)
-#Madrid (,-3.6817174,40.4352117)
-
 shinyServer(function(input, output) {
   
   punto <- reactive({
-    cbind(input$lat,input$lon) 
+    geocode(input$text) 
   })
   puntoTRANS <- reactive({
     ptoWGS <- SpatialPoints(punto(), CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
@@ -54,11 +48,11 @@ shinyServer(function(input, output) {
     datos$nieve <- t(spreci)
     datos$time<-idx
     
-    t_plot <- ggplot(datos, aes(x=time, y=t.vals.))+ geom_line(colour = "red", size = 1)+ylab("Temperatura ºC") + xlab("Fecha")+ ggtitle("Temperatura")+scale_x_datetime(breaks = date_breaks("6 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
+    t_plot <- ggplot(datos, aes(x=time, y=t.vals.))+ geom_line(colour = "red", size = 1)+ylab("Temperatura ÂºC") + xlab("Fecha")+ ggtitle("Temperatura")+scale_x_datetime(breaks = date_breaks("6 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
     s_plot <- ggplot(datos, aes(x=time, y=nieve))+geom_bar(stat="identity",fill="orange", colour="orange") +ylab("mm/h") + xlab("Fecha") + ggtitle("Nieve")+scale_x_datetime(breaks = date_breaks("6 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
     sl_plot <- ggplot(datos, aes(x=time, y=snow_level)) + geom_line(colour = "green", size = 1)+ylab("Altura (m)") + xlab("Fecha") + ggtitle("Snow level")+scale_x_datetime(breaks = date_breaks("6 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))
     p_plot <- ggplot(datos, aes(x=time, y=lluvia))+geom_bar(stat="identity",fill="blue", colour="blue")+ylab("mm/h") + xlab("Fecha") + ggtitle("Lluvia")+scale_x_datetime(breaks = date_breaks("6 hours"),labels = date_format("%d-%m %H h"))+theme(axis.text.x = element_text(angle = 90))        
-    multiplot<-grid.arrange(t_plot, sl_plot, s_plot, p_plot, ncol=2, main = paste('Coordenadas ', input$lat, ', ', input$lon))
+    multiplot<-grid.arrange(t_plot, sl_plot, s_plot, p_plot, ncol=2, main = input$text)
     
     print(multiplot)
     
@@ -102,13 +96,14 @@ shinyServer(function(input, output) {
     datos
   })
   
+  
   output$map <- renderPlot({
     map.base <- get_googlemap(
-      center= punto(),
+      center= cbind(punto()$lon,punto()$lat),
       maptype = 'hybrid', ## Map type as defined above (roadmap, terrain, satellite, hybrid)
-      markers = data.frame(punto()),
-      zoom = 10, ## 14 is just about right for a 1-mile radius
-      scale = 1, ## Set it to 2 for high resolution output
+      markers = punto(),
+      zoom = 12, ## 14 is just about right for a 1-mile radius
+      scale = 2, ## Set it to 2 for high resolution output
     )
     #map.base = get_map(location = c(input$lat,input$lon),zoom=14, source = "osm")
     

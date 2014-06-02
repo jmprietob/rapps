@@ -20,13 +20,12 @@ shinyUI(pageWithSidebar(
   sidebarPanel(
     wellPanel(
       helpText(HTML("<b>Extract data</b>")),
-      HTML("Insert the coordinates. Press update button to refresh the data."),
+      HTML("Insert Location and press update button to refresh the data."),
       submitButton("Update")
     ),
     wellPanel(
-      helpText(HTML("<b>Insert Lat - Lon</b>")),
-      numericInput("lat", "Latitude:", -0.285628),   
-      numericInput("lon", "Longitude:", 42.7244749)
+      helpText(HTML("<b>Insert Location</b>")),
+      textInput("text", "Location:", "Madrid")
     )
     ),
 
