@@ -10,7 +10,7 @@ library(markdown)
 
 
 # Define UI for dataset viewer application
-shinyUI(pageWithSidebar(
+shinyUI(fluidPage(theme = "bootstrap.css",
   
   # Application title
   headerPanel("Climatic hourly data"),
@@ -31,7 +31,9 @@ shinyUI(pageWithSidebar(
 
   mainPanel(
     tabsetPanel(     
-      tabPanel("Plot", plotOutput("plot")),
+      tabPanel("Mosaic plot", plotOutput("plot")),
+      tabPanel("Compact plot", plotOutput("plot2")),
+      tabPanel("Wind plot", plotOutput("plot3")),
       tabPanel("Map", plotOutput("map")),
       tabPanel("Summary", verbatimTextOutput("summary")), 
       tabPanel("Data", tableOutput("table")),
